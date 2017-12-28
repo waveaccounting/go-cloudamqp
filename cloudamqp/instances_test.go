@@ -106,7 +106,7 @@ func TestInstanceService_Create(t *testing.T) {
 	client := NewClient(httpClient, nil, "")
 	params := &CreateInstanceParams{
 		Name:   "test-instance-new",
-		Plan:   "tiger",
+		Plan:   "lemur",
 		Region: "amazon-web-services::us-east-1",
 	}
 	instance, _, err := client.Instances.Create(params)
@@ -119,6 +119,35 @@ func TestInstanceService_Create(t *testing.T) {
 		APIKey: "d6e6f799-d6ec-407a-a6e7-925414012121",
 	}
 	assert.Equal(t, expected, instance)
+}
+
+func TestInstanceService_Update(t *testing.T) {
+	httpClient, mux, server := testServer()
+	defer server.Close()
+
+	mux.HandleFunc("/api/instances/1236", func(w http.ResponseWriter, r *http.Request) {
+		assertMethod(t, "PUT", r)
+		// TODO: Figure out how to get this function working
+		// assertPostForm(t, map[string]interface{}{
+		// 		"name":   "test-instance-renamed",
+		// 		"plan":   "rabbit",
+		// 		"nodes": 2,
+		// 	},
+		// }, r)
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, `{
+			"message": "Changes saved"
+		}`)
+	})
+
+	client := NewClient(httpClient, nil, "")
+	params := &UpdateInstanceParams{
+		Name:  "test-instance-renamed",
+		Plan:  "tiger",
+		Nodes: 2,
+	}
+	_, _, err := client.Instances.Update(1236, params)
+	assert.NoError(t, err)
 }
 
 func TestInstanceService_Delete(t *testing.T) {

@@ -64,21 +64,21 @@ func (s *InstanceService) Create(params *CreateInstanceParams) (*Instance, *http
 	return instance, resp, relevantError(err, *apiError)
 }
 
-//
-// // UpdateOrganizationParams are the parameters for OrganizationService.Update.
-// type UpdateOrganizationParams struct {
-// 	Name string `json:"name,omitempty"`
-// 	Slug string `json:"slug,omitempty"`
-// }
-//
-// // Update a Sentry organization.
-// // https://docs.sentry.io/api/organizations/put-organization-details/
-// func (s *OrganizationService) Update(slug string, params *UpdateOrganizationParams) (*Organization, *http.Response, error) {
-// 	org := new(Organization)
-// 	apiError := new(APIError)
-// 	resp, err := s.sling.New().Put(slug+"/").BodyJSON(params).Receive(org, apiError)
-// 	return org, resp, relevantError(err, *apiError)
-// }
+// UpdateInstanceParams are the parameters for OrganizationService.Create.
+type UpdateInstanceParams struct {
+	Name  string `url:"name,omitempty"`
+	Plan  string `url:"plan,omitempty"`
+	Nodes int    `url:"nodes,omitempty"`
+}
+
+// Update a CloudAMQP instance.
+// https://customer.cloudamqp.com/team/api
+func (s *InstanceService) Update(id int, params *UpdateInstanceParams) (*Instance, *http.Response, error) {
+	instance := new(Instance)
+	apiError := new(APIError)
+	resp, err := s.sling.New().Path("instances/").Put(strconv.Itoa(id)).BodyForm(params).Receive(instance, apiError)
+	return instance, resp, relevantError(err, *apiError)
+}
 
 // Delete a CloudAMQP instance.
 // https://customer.cloudamqp.com/team/api
