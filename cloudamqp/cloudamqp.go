@@ -1,4 +1,4 @@
-package sentry
+package cloudamqp
 
 import (
 	"net/http"
@@ -10,17 +10,12 @@ import (
 )
 
 const (
-	DefaultBaseURL = "https://sentry.io/api/"
-	APIVersion     = "0"
+	DefaultBaseURL = "https://customer.cloudamqp.com/api/"
 )
 
 type Client struct {
-	sling          *sling.Sling
-	Organizations  *OrganizationService
-	Teams          *TeamService
-	Projects       *ProjectService
-	ProjectKeys    *ProjectKeyService
-	ProjectPlugins *ProjectPluginService
+	sling     *sling.Sling
+	Instances *InstanceService
 }
 
 // NewClient returns a new Sentry API client.
@@ -34,7 +29,7 @@ func NewClient(httpClient *http.Client, baseURL *url.URL, token string) *Client 
 	if baseURL == nil {
 		baseURL, _ = url.Parse(DefaultBaseURL)
 	}
-	baseURL.Path = path.Join(baseURL.Path, APIVersion) + "/"
+	baseURL.Path = path.Join(baseURL.Path) + "/"
 
 	base := sling.New().Base(baseURL.String()).Client(httpClient)
 
@@ -43,12 +38,8 @@ func NewClient(httpClient *http.Client, baseURL *url.URL, token string) *Client 
 	}
 
 	c := &Client{
-		sling:          base,
-		Organizations:  newOrganizationService(base.New()),
-		Teams:          newTeamService(base.New()),
-		Projects:       newProjectService(base.New()),
-		ProjectKeys:    newProjectKeyService(base.New()),
-		ProjectPlugins: newProjectPluginService(base.New()),
+		sling:     base,
+		Instances: newInstanceService(base.New()),
 	}
 	return c
 }

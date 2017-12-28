@@ -1,19 +1,19 @@
-package sentry
+package cloudamqp
 
 import "fmt"
 
-// APIError represents a Sentry API Error response
+// APIError represents a CloudAMQP API Error response
 type APIError map[string]interface{}
 
 // TODO: use this instead
 // type apiError struct {
-// 	Detail string `json:"detail"`
+// 	Error string `json:"error"`
 // }
 
 func (e APIError) Error() string {
 	if len(e) == 1 {
-		if detail, ok := e["detail"].(string); ok {
-			return fmt.Sprintf("sentry: %s", detail)
+		if error, ok := e["error"].(string); ok {
+			return fmt.Sprintf("cloudamqp: %s", error)
 		}
 	}
 
