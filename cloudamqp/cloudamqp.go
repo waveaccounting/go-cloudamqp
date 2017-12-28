@@ -10,9 +10,10 @@ import (
 )
 
 const (
-	DefaultBaseURL = "https://customer.cloudamqp.com/api/"
+	defaultBaseURL = "https://customer.cloudamqp.com/api/"
 )
 
+// Client is a sling client for instance resources
 type Client struct {
 	sling     *sling.Sling
 	Instances *InstanceService
@@ -20,14 +21,14 @@ type Client struct {
 
 // NewClient returns a new Sentry API client.
 // If a nil httpClient is given, the http.DefaultClient will be used.
-// If a nil baseURL is given, the DefaultBaseURL will be used.
+// If a nil baseURL is given, the defaultBaseURL will be used.
 func NewClient(httpClient *http.Client, baseURL *url.URL, token string) *Client {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
 
 	if baseURL == nil {
-		baseURL, _ = url.Parse(DefaultBaseURL)
+		baseURL, _ = url.Parse(defaultBaseURL)
 	}
 	baseURL.Path = path.Join(baseURL.Path) + "/"
 
