@@ -77,7 +77,46 @@ func TestInstanceService_Get(t *testing.T) {
 		Plan:   "lemur",
 		Region: "amazon-web-services::us-east-1",
 		URL:    "amqp://username:password@jolly-wombat.rmq.cloudamqp.com/abcdefg",
-		ApiKey: "3d5fbd52-dc07-4ae3-976f-27bf9604e00b",
+		APIKey: "3d5fbd52-dc07-4ae3-976f-27bf9604e00b",
+	}
+	assert.Equal(t, expected, instance)
+}
+
+func TestInstanceService_Create(t *testing.T) {
+	httpClient, mux, server := testServer()
+	defer server.Close()
+
+	mux.HandleFunc("/api/instances", func(w http.ResponseWriter, r *http.Request) {
+		assertMethod(t, "POST", r)
+		// TODO: Figure out how to get this function working
+		// assertPostForm(t, map[string]interface{}{
+		// 	"name":   "test-instance-new",
+		// 	"plan":   "tiger",
+		// 	"region": "amazon-web-services::us-east-1",
+		// }, r)
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, `{
+			"id": 1236,
+			"message": "Instance created",
+			"url": "amqp://username:password@happy-fish.rmq.cloudamqp.com/abcdefg",
+			"apikey": "d6e6f799-d6ec-407a-a6e7-925414012121"
+		}`)
+	})
+
+	client := NewClient(httpClient, nil, "")
+	params := &CreateInstanceParams{
+		Name:   "test-instance-new",
+		Plan:   "tiger",
+		Region: "amazon-web-services::us-east-1",
+	}
+	instance, _, err := client.Instances.Create(params)
+	assert.NoError(t, err)
+
+	expected := &Instance{
+		ID:     1236,
+		Name:   "",
+		URL:    "amqp://username:password@happy-fish.rmq.cloudamqp.com/abcdefg",
+		APIKey: "d6e6f799-d6ec-407a-a6e7-925414012121",
 	}
 	assert.Equal(t, expected, instance)
 }

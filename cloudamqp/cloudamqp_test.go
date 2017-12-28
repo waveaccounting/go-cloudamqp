@@ -1,14 +1,10 @@
 package cloudamqp
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"testing"
-	"time"
-
-	"encoding/json"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -58,18 +54,11 @@ func assertQuery(t *testing.T, expected map[string]string, req *http.Request) {
 	assert.Equal(t, expectedValues, queryValues)
 }
 
-// assertPostJSON tests that the Request has the expected JSON in its Body
-func assertPostJSON(t *testing.T, expected interface{}, req *http.Request) {
+// assertPostForm tests that the Request has the expected form parameters in its Body
+func assertPostForm(t *testing.T, expected interface{}, req *http.Request) {
 	var actual interface{}
-	err := json.NewDecoder(req.Body).Decode(&actual)
+	err := req.ParseForm()
+	// err := json.NewDecoder(req.Body).Decode(&actual)
 	assert.NoError(t, err)
 	assert.Equal(t, expected, actual)
-}
-
-func mustParseTime(value string) time.Time {
-	t, err := time.Parse(time.RFC3339, value)
-	if err != nil {
-		panic(fmt.Sprintf("mustParseTime: %s", err))
-	}
-	return t
 }

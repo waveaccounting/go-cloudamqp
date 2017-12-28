@@ -14,7 +14,7 @@ type Instance struct {
 	Region string `json:"region"`
 	Name   string `json:"name"`
 	URL    string `json:"url,omitempty"`
-	ApiKey string `json:"apikey,omitempty"`
+	APIKey string `json:"apikey,omitempty"`
 }
 
 // InstanceService provides methods for accessing CloudAMQP instance API endpoints.
@@ -38,12 +38,6 @@ func (s *InstanceService) List() ([]Instance, *http.Response, error) {
 	return *instances, resp, err
 }
 
-// // CreateOrganizationParams are the parameters for OrganizationService.Create.
-// type CreateOrganizationParams struct {
-// 	Name string `json:"name,omitempty"`
-// 	Slug string `json:"slug,omitempty"`
-// }
-//
 // Get a CloudAMQP instance.
 // https://customer.cloudamqp.com/team/api
 func (s *InstanceService) Get(id string) (*Instance, *http.Response, error) {
@@ -53,15 +47,22 @@ func (s *InstanceService) Get(id string) (*Instance, *http.Response, error) {
 	return instance, resp, relevantError(err, *apiError)
 }
 
-//
-// // Create a new Sentry organization.
-// // https://docs.sentry.io/api/organizations/post-organization-index/
-// func (s *OrganizationService) Create(params *CreateOrganizationParams) (*Organization, *http.Response, error) {
-// 	org := new(Organization)
-// 	apiError := new(APIError)
-// 	resp, err := s.sling.New().Post("").BodyJSON(params).Receive(org, apiError)
-// 	return org, resp, relevantError(err, *apiError)
-// }
+// CreateInstanceParams are the parameters for OrganizationService.Create.
+type CreateInstanceParams struct {
+	Name   string `url:"name"`
+	Plan   string `url:"plan"`
+	Region string `url:"region"`
+}
+
+// Create a new CloudAMP instance.
+// https://customer.cloudamqp.com/team/api
+func (s *InstanceService) Create(params *CreateInstanceParams) (*Instance, *http.Response, error) {
+	instance := new(Instance)
+	apiError := new(APIError)
+	resp, err := s.sling.New().Post("instances").BodyForm(params).Receive(instance, apiError)
+	return instance, resp, relevantError(err, *apiError)
+}
+
 //
 // // UpdateOrganizationParams are the parameters for OrganizationService.Update.
 // type UpdateOrganizationParams struct {
