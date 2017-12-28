@@ -69,7 +69,7 @@ func TestInstanceService_Get(t *testing.T) {
 	})
 
 	client := NewClient(httpClient, nil, "")
-	instance, _, err := client.Instances.Get("1234")
+	instance, _, err := client.Instances.Get(1234)
 	assert.NoError(t, err)
 	expected := &Instance{
 		ID:     1234,
@@ -119,4 +119,17 @@ func TestInstanceService_Create(t *testing.T) {
 		APIKey: "d6e6f799-d6ec-407a-a6e7-925414012121",
 	}
 	assert.Equal(t, expected, instance)
+}
+
+func TestInstanceService_Delete(t *testing.T) {
+	httpClient, mux, server := testServer()
+	defer server.Close()
+
+	mux.HandleFunc("/api/instances/1236", func(w http.ResponseWriter, r *http.Request) {
+		assertMethod(t, "DELETE", r)
+	})
+
+	client := NewClient(httpClient, nil, "")
+	_, err := client.Instances.Delete(1236)
+	assert.NoError(t, err)
 }
