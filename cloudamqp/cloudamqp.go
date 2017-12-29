@@ -19,7 +19,7 @@ type Client struct {
 	Instances *InstanceService
 }
 
-// NewClient returns a new Sentry API client.
+// NewClient returns a new CloudAMQP API client.
 // If a nil httpClient is given, the http.DefaultClient will be used.
 // If a nil baseURL is given, the defaultBaseURL will be used.
 func NewClient(httpClient *http.Client, baseURL *url.URL, token string) *Client {
@@ -35,7 +35,7 @@ func NewClient(httpClient *http.Client, baseURL *url.URL, token string) *Client 
 	base := sling.New().Base(baseURL.String()).Client(httpClient)
 
 	if token != "" {
-		base.Add("Authorization", "Bearer "+token)
+		base.SetBasicAuth(token, "")
 	}
 
 	c := &Client{
