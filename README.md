@@ -3,7 +3,7 @@ Go library for accessing the [CloudAMQP API](https://customer.cloudamqp.com/team
 
 ## Install
 ```sh
-go get -u github.com/waveaccounting/go-cloudamqp/sentry
+go get -u github.com/waveaccounting/go-cloudamqp/cloudamqp
 ```
 
 ## Documentation
