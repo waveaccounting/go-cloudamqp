@@ -67,7 +67,7 @@ func (s *InstanceService) Create(params *CreateInstanceParams) (*Instance, *http
 	return instance, resp, relevantError(err, *apiError)
 }
 
-// CreateAndWait Create a new CloudAMP instance and wats for it to be available
+// CreateAndWait Create a new CloudAMP instance and waits for it to be available
 // https://customer.cloudamqp.com/team/api
 func (s *InstanceService) CreateAndWait(params *CreateInstanceParams, timeoutInSeconds float64) (*Instance, *http.Response, error) {
 	instance, resp, err := s.Create(params)

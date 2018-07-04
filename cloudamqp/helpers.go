@@ -36,9 +36,3 @@ func checkInstanceUntilAvailable(instance *Instance, timeoutInSeconds float64) e
 		}
 	}
 }
-
-// checkInstanceUntilDeleted Blocks execution until the instance
-// is fully terminated
-// func checkInstanceUntilDeleted(instance *Instance) error {
-// 	return nil
-// }
